@@ -1,4 +1,5 @@
 use std::hash::Hash;
+use std::os::windows::process::CommandExt;
 use serde::Serialize;
 
 #[derive(Debug, Eq, Serialize)]
@@ -17,8 +18,8 @@ impl Command {
             .arg(format!("{}K", speed.to_string()))
             .arg(&self.local_path)
             .arg(format!("{}:{}\\{}", cloud, root, self.remote_path))
-            .output()
-            .expect("");
+            .creation_flags(0x08000000)
+            .output();
     }
 }
 
