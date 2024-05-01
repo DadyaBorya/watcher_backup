@@ -20,8 +20,8 @@ pub enum Cloud {
 }
 
 impl Cloud {
-    pub fn name(&self) -> String {
-        let config_json = file_service::read_file(&PathBuf::from("config.json")).unwrap();
+    pub fn name(&self, config_path: &PathBuf) -> String {
+        let config_json = file_service::read_file(config_path).unwrap();
         let config: Config = serde_json::from_str(&config_json).unwrap();
 
         match self {

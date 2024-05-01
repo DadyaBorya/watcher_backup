@@ -61,7 +61,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     for (cloud, _) in scheduler.clouds {
         commands.iter()
             .for_each(|command| {
-                command.spawn_rclone_command(&cloud.name(), &root, scheduler.speed);
+                command.spawn_rclone_command(&cloud.name(&args.config), &root, scheduler.speed);
                 sleep(Duration::from_millis(50));
             });
     }
