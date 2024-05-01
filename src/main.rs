@@ -27,13 +27,13 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let args = Args::parse();
-
     #[cfg(target_os = "windows")]
     {
         hide_console_window();
     }
 
+
+    let args = Args::parse();
 
     let scheduler_json = file_service::read_file(&args.path)?;
     let scheduler: Scheduler = serde_json::from_str(&scheduler_json)?;
@@ -120,6 +120,8 @@ fn enable_schtask(name: &str, cron: &str, path: &str) {
         .arg("/st")
         .arg(time)
         .arg("/f")
+        .arg("/Rl")
+        .arg("HIGHEST")
         .output()
         .expect("Failed to execute command");
 }
