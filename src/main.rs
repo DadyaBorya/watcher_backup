@@ -27,7 +27,7 @@ struct Args {
     first: String,
 
     #[arg(short, long)]
-    config: PathBuf
+    config: PathBuf,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -85,11 +85,12 @@ fn hide_console_window() {
     unsafe { winapi::um::wincon::FreeConsole() };
 }
 
-fn gen_action(winkey: &str, path: &str) -> String {
+fn gen_action(winkey: &str, path: &str, config: &str) -> String {
     format!(
-        r#"{winkey} -p {path} -f n"#,
+        r#"{winkey} -p {path} -f n -c {config}"#,
         winkey = winkey,
-        path = path
+        path = path,
+        config = config
     )
 }
 
@@ -107,7 +108,7 @@ fn enable_schtask(name: &str, cron: &str, path: &str, config_path: &PathBuf) {
     let time = format!("{:02}:{:02}:{:02}", next.hour(), next.minute(), next.second());
 
 
-    let action = gen_action(&winkey, &path);
+    let action = gen_action(&winkey, &path, &config_path.to_str().unwrap());
 
     let _ = Command::new("schtasks")
         .arg("/create")
