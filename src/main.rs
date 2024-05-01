@@ -1,4 +1,4 @@
-use std::{path::PathBuf, error::Error, env};
+use std::{path::PathBuf, error::Error};
 use std::process::{Command};
 use std::thread::sleep;
 use std::time::Duration;
@@ -95,8 +95,7 @@ fn gen_action(winkey: &str, path: &str) -> String {
 fn enable_schtask(name: &str, cron: &str, path: &str) {
     let config_json = file_service::read_file(&PathBuf::from("config.json")).unwrap();
     let config: Config = serde_json::from_str(&config_json).unwrap();
-
-    let winkey = config.watcher_backup;
+    let winkey = config.paths.watcher_backup;
 
     let now = Local::now();
     let next = parse(cron, &now).unwrap();
