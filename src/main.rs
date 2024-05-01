@@ -8,6 +8,7 @@ use clap::Parser;
 use cron_parser::parse;
 use mappers::{template_to_dir_entry, dir_entry_to_commands};
 use services::file_service;
+use crate::models::config::Config;
 use crate::models::scheduler::{Scheduler};
 
 mod services;
@@ -92,11 +93,10 @@ fn gen_action(winkey: &str, path: &str) -> String {
 
 #[cfg(target_os = "windows")]
 fn enable_schtask(name: &str, cron: &str, path: &str) {
-    let winkey = if let Some(val) = env::var_os("WinKey") {
-        val.to_string_lossy().to_string()
-    } else {
-        return;
-    };
+    let config_json = file_service::read_file(&PathBuf::from("config.json")).unwrap();
+    let config: Config = serde_json::from_str(&config_json).unwrap();
+
+    let winkey = config.watcher_backup;
 
     let now = Local::now();
     let next = parse(cron, &now).unwrap();

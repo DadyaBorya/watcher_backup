@@ -8,5 +8,6 @@ pub struct CloudConfig {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
-    pub clouds: CloudConfig
+    pub clouds: CloudConfig,
+    pub watcher_backup: String
 }

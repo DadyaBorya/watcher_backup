@@ -5,4 +5,4 @@ pub mod entry_file_filter;
 pub mod entry_file_priority;
 pub mod command;
 pub mod scheduler;
-mod config;
+pub mod config;
