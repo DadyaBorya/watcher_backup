@@ -13,3 +13,4 @@ serde_json = "1.0.64"
 chrono = "0.4.1"
 cron-parser = "*"
 winapi = {version = "0.3", features = ["wincon", "winuser"]}
+gethostname = "0.4.1"

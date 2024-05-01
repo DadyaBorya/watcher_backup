@@ -52,8 +52,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let entries = template_to_dir_entry::map(content)?;
 
     let commands = dir_entry_to_commands::map(entries)?;
-
-    let root = format!("{}_{}", scheduler.name, Utc::now().format("%Y_%m_%d_and_%Hh_%Mm_%Ss"));
+    let hostname = gethostname::gethostname().to_string_lossy().to_string();
+    let root = format!("{}/{}/{}", hostname, scheduler.name, Utc::now().format("%Y_%m_%d_and_%Hh_%Mm_%Ss"));
 
     for (cloud, _) in scheduler.clouds {
         commands.iter()
@@ -70,7 +70,7 @@ fn hide_console_window() {
     use winapi::um::wincon::GetConsoleWindow;
     use winapi::um::winuser::{ShowWindow, SW_HIDE};
 
-    let window = unsafe {GetConsoleWindow()};
+    let window = unsafe { GetConsoleWindow() };
 
     if window != ptr::null_mut() {
         unsafe {
