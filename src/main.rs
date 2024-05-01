@@ -25,6 +25,9 @@ struct Args {
     /// Is first excecution
     #[arg(short, long)]
     first: String,
+
+    #[arg(short, long)]
+    config: PathBuf
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -40,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     #[cfg(target_os = "windows")]
     {
-        enable_schtask(&scheduler.name, &scheduler.cron, &args.path.to_string_lossy());
+        enable_schtask(&scheduler.name, &scheduler.cron, &args.path.to_string_lossy(), &args.config);
     }
 
     if args.first.to_lowercase() == "y" {
@@ -92,8 +95,9 @@ fn gen_action(winkey: &str, path: &str) -> String {
 
 
 #[cfg(target_os = "windows")]
-fn enable_schtask(name: &str, cron: &str, path: &str) {
-    let config_json = file_service::read_file(&PathBuf::from("config.json")).unwrap();
+fn enable_schtask(name: &str, cron: &str, path: &str, config_path: &PathBuf) {
+    let config_json = file_service::read_file(config_path).unwrap();
+    println!("{config_json}");
     let config: Config = serde_json::from_str(&config_json).unwrap();
     let winkey = config.paths.watcher_backup;
 
