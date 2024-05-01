@@ -1,5 +1,8 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
+use crate::models::config::Config;
+use crate::services::file_service;
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
 pub enum Protocol {
@@ -17,22 +20,15 @@ pub enum Cloud {
 }
 
 impl Cloud {
-    // pub fn protocols(&self) -> Vec<Protocol> {
-    //     match self {
-    //         Cloud::Mega => vec![Protocol::Https, Protocol::Http],
-    //         Cloud::GoogleDrive => vec![Protocol::Https, Protocol::Http, Protocol::Webdav],
-    //     }
-    // }
-
     pub fn name(&self) -> String {
+        let config_json = file_service::read_file(&PathBuf::from("config.json")).unwrap();
+        let config: Config = serde_json::from_str(&config_json).unwrap();
+
         match self {
-            Cloud::Mega => String::from("mega"),
-            Cloud::GoogleDrive => String::from("googledrive"),
+            Cloud::Mega => config.clouds.mega,
+            Cloud::GoogleDrive => config.clouds.google_drive,
         }
     }
-    // pub fn list() -> Vec<Cloud> {
-    //     vec![Cloud::Mega, Cloud::GoogleDrive]
-    // }
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
