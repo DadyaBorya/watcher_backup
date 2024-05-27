@@ -25,6 +25,14 @@ impl Command {
 
     #[cfg(target_os = "macos")]
     pub fn spawn_rclone_command(&self, cloud: &str, root: &str, speed: f32) {
+        let _ = std::process::Command::new("rclone")
+            .arg("copy")
+            .arg("--bwlimit")
+            .arg(format!("{}K", speed.to_string()))
+            .arg(&self.local_path)
+            .arg(format!("{}:{}{}", cloud, root, self.remote_path))
+            .output();
+
     }
 }
 
