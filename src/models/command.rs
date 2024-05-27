@@ -1,4 +1,5 @@
 use std::hash::Hash;
+#[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 use serde::Serialize;
 
@@ -20,6 +21,10 @@ impl Command {
             .arg(format!("{}:{}\\{}", cloud, root, self.remote_path))
             .creation_flags(0x08000000)
             .output();
+    }
+
+    #[cfg(target_os = "macos")]
+    pub fn spawn_rclone_command(&self, cloud: &str, root: &str, speed: f32) {
     }
 }
 

@@ -68,6 +68,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+#[cfg(target_os = "windows")]
 fn hide_console_window() {
     use std::ptr;
     use winapi::um::wincon::GetConsoleWindow;
@@ -85,6 +86,7 @@ fn hide_console_window() {
     unsafe { winapi::um::wincon::FreeConsole() };
 }
 
+#[cfg(target_os = "windows")]
 fn gen_action(winkey: &str, path: &str, config: &str) -> String {
     format!(
         r#"{winkey} -p {path} -f n -c {config}"#,
